@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Theming Workshop Kopano Conference 2017</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="kopano-conference-2017.css"></link>
+  </head>
+  <body>
+    <textarea id="source">
+
+# WebApp Theming Workshop
+
+#### Martijn Alberts
+#### Ronald Toussaint
+
+---
+
+# Outline
+
+- Set up a development environment
+- Create the Coca-Cola theme
+- Create your own theme
+
+---
+
+# Setting up your development environment
+
+- Oracle VirtualBox
+- Virtual Machine provided
+    - root/root
+- http://192.168.56.101/kopano-webapp
+    - user1/user1, user2/user2, ...,  user5/user5
+
+---
+
+# Editing files
+
+- nano &amp; vim are installed on the virtual machine
+- Use your own editor on host sytem by creating a shared folder in VirtualBox
+    - Call the shared folder 'theming2017'
+    - Copy the WebApp files to the shared folder:
+    ```bash
+    $ cp -r /usr/share/kopano-webapp /media/sf_theming2017
+    ```
+    - This Webapp should now be available at http://192.168.56.101/shared-kopano-webapp
+---
+
+# About themes and plugins
+
+- Theming uses the pluggable architecture of the WebApp
+- A theme extends the *Zarafa.core.ThemePlugin*, which extends *Zarafa.core.Plugin*. So a theme is a also a plugin!
+- Begin by simply copying the example theme
+
+---
+
+# Creating the Coca-Cola theme
+
+## Setup your new theme
+
+- Rename the theme directory
+- Update the manifest file
+- Update the main plugin file (js/Theme.js)
+
+---
+
+# Setting your theme as default theme
+
+- Open config.php
+- Change the define for "THEME"
+```php
+	// General WebApp theme. This will be loaded by default for every user
+	// (if the theme is installed as a plugin)
+	// Users can override the 'logged-in' theme in the settings.
+	define("THEME", 'themecocacola');
+```
+Refresh your browser. Does it show the new theme?
+
+---
+
+# Selecting your theme as user
+
+- Login as user1
+- Go to settings and select the Coca-Cola theme
+- Click on "Apply"
+
+Is the WebApp using the new theme for this user?
+
+---
+
+# The background image of the login screen
+
+Copy a nice background image from the directory /srv/cocacola to the img directory of your plugin, e.g.:
+```bash
+$ cd /media/sf_theming2017/kopano-webapp/plugins/cocacola/img
+
+$ cp /srv/cocacola/coke-taste-the-feeling-11.jpg ./background.jpg
+```
+
+Refresh your browser. Do you see the background?
+
+---
+
+# The logo of the login screen
+
+Logo should be max 220 x 60px
+
+Copy the image called logo_login.png to your plugins image folder
+```bash
+$ cp /srv/cocacola/logo_login.png .
+```
+
+Refresh your browser. Do you see the logo?
+
+---
+
+# The button of the login screen
+
+Open the css file of your plugin (css/theme.css) and change the color and 'hover color' of the button:
+
+```css
+(...)
+/* The Sign in button of the login screen */
+body.login #form-container #submitbutton,
+#loading-mask #form-container #submitbutton {
+    background: #f40009;
+}
+/* Hover state and active state of the Sign in button */
+body.login #form-container #submitbutton:hover,
+#loading-mask #form-container #submitbutton:hover,
+body.login #form-container #submitbutton:active,
+#loading-mask #form-container #submitbutton:active {
+    background: #d40009;
+}
+(...)
+```
+
+---
+# Updating the spinner
+
+The spinner is an image (of max 240 x 220px) that is rotated by the CSS
+Copy the file bottle.png to the image directory of your plugin
+```bash
+$ cp /srv/cocacola/bottle.png .
+```
+Instead of renaming the file we will now update the CSS file of our plugin to use this image
+```css
+/* The spinner of the login/loading screen */
+body.login #form-container.loading .right,
+#loading-mask #form-container.loading .right {
+  background: url(../img/bottle.png) no-repeat center center;
+}
+```
+
+---
+
+# The top menubar of the WebApp main view
+
+In the CSS file the color of the bar and the color of the hovered/selected menu items are defined.
+Let's update these to the colors of Coca-Cola.
+
+We will use  **#f40009** for the menu bar and **#d40009** (a little darker) for the hovered/selected items.
+
+And we will make the text color of normal menu items a little brighter.
+
+---
+
+# The logo in the WebApp main view
+
+Height preferably 40px (max 45px)
+
+Copy the file called logo_app.png to the image directory of our theme:
+
+```bash
+$ cp /srv/cocacola/logo_app.png .
+```
+
+Refresh the browser. Is the new logo displayed?
+
+---
+
+# The color of the 'action' items
+
+Action items are items that have a special color to make them stand out, e.g. buttons with major actions attached to it.
+
+We will use the colors **#f40009** and **#d40009** also for the normal state and the hover state of the action items.
+
+---
+
+# Selected items and extra information blocks
+
+The standard colors of the WebApp will be fine for our theme, so we will simply remove the corresponding lines from our
+CSS file.
+
+---
+
+# The favicon
+
+We can simply change the favicon of the WebApp by putting a favicon.ico file in our plugin directory.
+
+```bash
+$ cd /media/sf_theming2017/kopano-webapp/plugins/cocacola/
+
+$ cp /srv/cocacola/favicon-32x32.png ./favicon.ico
+
+```
+
+You might need to refresh your browser a couple of times before the favicon gets updated.
+
+---
+
+# The welcome screen
+
+First reset the WebApp settings to enter the welcome screen again.
+
+Now, in the CSS file update the color of the top bar
+```css
+/* The top bar of the Welcome dialog */
+.zarafa-welcome-body > .x-panel-bwrap > .x-panel-body div.zarafa-welcome-title {
+    border-left: 1px solid #f40009;
+    border-right: 1px solid #f40009;
+    background: #f40009;
+}
+```
+
+Refresh the page. Does the top bar have<br/>
+the correct color?
+
+---
+
+# Questions so far
+
+.centered-image[![](img/questionmark.jpg)]
+
+---
+
+# Create your own theme
+
+Use themeexample2 to create a new theme.
+
+Slides of this workshop can be found at:
+https://rotous.github.io/kopano-theming-workshop-2017/
+
+    </textarea>
+    <script src="js/remark.min.js"></script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
